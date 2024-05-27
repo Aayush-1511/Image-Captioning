@@ -40,7 +40,7 @@ class vocab():
     def tokenizer_eng(text):
         return [word.text for word in spacy_eng(text)]
 
-    def build_vocab(self, captions):
+    def create_vocab(self, captions):
         freq = {}
         idx = 4
 
@@ -76,7 +76,7 @@ class dataset8k(Dataset):
 
         # Creating a vocabulary
         self.vocab = vocab(freq_thresh)
-        self.vocab.build_vocab(list(self.captions))
+        self.vocab.create_vocab(list(self.captions))
 
     def __len__(self):
         return len(self.dataset)
@@ -150,23 +150,3 @@ def get_loader(
         collate_fn= MyCollate(pad_idx),
     )
     return {'train': train_loader, 'val': val_loader, 'test': test_loader}, dataset
-    
-if __name__=="__main__":
-
-    transform = transforms.Compose(
-        [
-        transforms.Resize((224,224)),
-        transforms.ToTensor(),]
-    )
-
-    dataloader, _ = get_loader(
-        img_folder=img_folder, 
-        caption_file=caption_file,
-        transform = transform,
-        val_split=0.2,
-        test_split = 0.1,
-    )
-
-    for idx, (imgs, captions) in enumerate(dataloader['train']):
-        print(imgs.shape)
-        print(captions.shape)
