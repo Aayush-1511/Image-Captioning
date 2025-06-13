@@ -88,11 +88,6 @@ class DecoderRNN(nn.Module):
     def forward(self, features, captions):
         embeddings = self.dropout(self.embed(captions))
         features = torch.unsqueeze(features, 0)
-
-        # print(f"{features.shape}\t{embeddings.shape}\n")
-        '''was having an error where the features and embeddings weren't concateneting due to size incompatibility
-        so i tried printing their shapes to check where the error could have been '''
-
         embeddings = torch.cat((features, embeddings), dim=0)
         hiddens, _ = self.lstm(embeddings)
         outputs = self.linear(hiddens)
